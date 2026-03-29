@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to PDF</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script type="module" src="../../assets/js/shared-ui.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;1,300;1,700&family=DM+Mono:wght@400;500&display=swap');
+:root{--bg:#faf7f2;--surface:#fff;--border:#e8e2d9;--accent:#2f4858;--accent2:#e8825a;--text:#2f4858;--muted:#9a9082;--success:#3a7d44;--error:#c0392b;--radius:14px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Fraunces',serif;min-height:100vh;padding:40px 20px 80px;display:flex;flex-direction:column;align-items:center}
+.content{width:100%;max-width:580px}
+.header{margin-bottom:40px;animation:fadeUp 0.4s ease both}
+.eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;color:var(--accent2);text-transform:uppercase;margin-bottom:12px}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em}
+h1 em{font-style:italic;color:var(--accent2)}
+.sub{color:var(--muted);font-size:14px;margin-top:8px;font-family:'DM Mono',monospace;font-weight:400}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:16px;animation:fadeUp 0.4s 0.1s ease both;box-shadow:0 2px 8px rgba(47,72,88,0.06)}
+.drop-zone{border:2px dashed var(--border);border-radius:10px;padding:36px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;background:var(--bg)}
+.drop-zone:hover,.drop-zone.over{border-color:var(--accent2);background:#fff8f5}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:28px;margin-bottom:10px}
+.drop-title{font-size:15px;font-weight:500;margin-bottom:4px}
+.drop-sub{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:16px}
+.preview-item{position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:var(--bg);aspect-ratio:3/4;cursor:grab}
+.preview-item img{width:100%;height:100%;object-fit:cover;display:block}
+.preview-item.dragging{opacity:0.3}
+.preview-item.drag-over{outline:2px solid var(--accent2)}
+.preview-remove{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.preview-num{position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.55);color:#fff;font-family:'DM Mono',monospace;font-size:10px;padding:2px 5px;border-radius:3px}
+.hint{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-align:center;margin-top:8px}
+.settings{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.setting{display:flex;flex-direction:column;gap:6px}
+.setting label{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em}
+.setting select{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:9px 10px;font-size:13px;color:var(--text);font-family:'DM Mono',monospace;outline:none;cursor:pointer}
+.setting select:focus{border-color:var(--accent2)}
+.btn{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:500;font-family:'Fraunces',serif;cursor:pointer;margin-top:16px;transition:all 0.2s;letter-spacing:-0.01em}
+.btn:hover{background:#1e3040;transform:translateY(-1px)}
+.btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;transform:none}
+.progress-wrap{display:none;margin-top:14px}
+.progress-wrap.visible{display:block}
+.progress-label{font-size:12px;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:6px}
+.progress-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent2);border-radius:2px;transition:width 0.3s;width:0%}
+.status{display:none;align-items:center;gap:8px;padding:11px 14px;border-radius:8px;font-size:13px;margin-top:12px;font-family:'DM Mono',monospace}
+.status.visible{display:flex}
+.status.success{background:#f0faf2;border:1px solid #b7dfc2;color:var(--success)}
+.status.error{background:#fdf2f2;border:1px solid #f5c6c6;color:var(--error)}
+.dl-btn{display:none;width:100%;padding:12px;background:transparent;color:var(--success);border:1px solid #b7dfc2;border-radius:8px;font-size:14px;font-weight:500;font-family:'Fraunces',serif;cursor:pointer;margin-top:10px;text-align:center;text-decoration:none;align-items:center;justify-content:center;gap:8px;transition:background 0.2s}
+.dl-btn.visible{display:flex}
+.dl-btn:hover{background:#f0faf2}
+.reset{font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;font-family:'DM Mono',monospace;background:none;border:none;margin-top:10px;display:block;text-align:center}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="content">
+  <div class="header">
+    <div class="eyebrow">// Tool 04</div>
+    <h1>Images <em>to PDF</em></h1>
+    <p class="sub">JPG · PNG · WEBP → PDF · drag to reorder</p>
+  </div>
+  <div class="card">
+    <div class="drop-zone" id="dropZone">
+      <input type="file" accept="image/*" multiple id="fileInput">
+      <div class="drop-icon">🖼️</div>
+      <div class="drop-title">Drop images here</div>
+      <div class="drop-sub">JPG, PNG, WEBP · multiple files OK</div>
+    </div>
+    <div class="preview-grid" id="previewGrid"></div>
+    <p class="hint" id="hint" style="display:none">↔ Drag thumbnails to reorder pages</p>
+    <div class="settings" id="settings" style="display:none">
+      <div class="setting">
+        <label>Page Size</label>
+        <select id="pageSize">
+          <option value="A4">A4 (210×297mm)</option>
+          <option value="Letter">Letter (216×279mm)</option>
+          <option value="auto" selected>Match Image</option>
+        </select>
+      </div>
+      <div class="setting">
+        <label>Orientation</label>
+        <select id="orientation">
+          <option value="portrait" selected>Portrait</option>
+          <option value="landscape">Landscape</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn" id="convertBtn" disabled>Convert to PDF</button>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label" id="progressLabel">Processing…</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <div class="status success" id="statusSuccess"><span>✓</span><span id="successMsg"></span></div>
+    <div class="status error" id="statusError"><span>✕</span><span id="errorMsg"></span></div>
+    <a class="dl-btn" id="dlBtn">⬇ Download PDF</a>
+    <button class="reset" id="resetBtn" style="display:none">↺ Start over</button>
+  </div>
+</div>
+<script>
+const dropZone=document.getElementById('dropZone'),fileInput=document.getElementById('fileInput'),previewGrid=document.getElementById('previewGrid'),hint=document.getElementById('hint'),settings=document.getElementById('settings'),convertBtn=document.getElementById('convertBtn'),progressWrap=document.getElementById('progressWrap'),progressLabel=document.getElementById('progressLabel'),progressFill=document.getElementById('progressFill'),statusSuccess=document.getElementById('statusSuccess'),statusError=document.getElementById('statusError'),successMsg=document.getElementById('successMsg'),errorMsg=document.getElementById('errorMsg'),dlBtn=document.getElementById('dlBtn'),resetBtn=document.getElementById('resetBtn');
+let images=[];let dragSrc=null;
+const PAGE_SIZES={A4:[595,842],Letter:[612,792]};
+function hideAll(){progressWrap.classList.remove('visible');statusSuccess.classList.remove('visible');statusError.classList.remove('visible');dlBtn.classList.remove('visible')}
+function showError(m){hideAll();errorMsg.textContent=m;statusError.classList.add('visible')}
+function fmt(b){if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(2)+'MB'}
+
+function renderPreviews(){
+  previewGrid.innerHTML='';
+  if(images.length===0){hint.style.display='none';settings.style.display='none';convertBtn.disabled=true;return}
+  hint.style.display='block';settings.style.display='grid';convertBtn.disabled=false;
+  images.forEach((img,i)=>{
+    const el=document.createElement('div');
+    el.className='preview-item';el.draggable=true;el.dataset.idx=i;
+    el.innerHTML=`<img src="${img.url}" alt=""><button class="preview-remove" data-i="${i}">✕</button><span class="preview-num">${i+1}</span>`;
+    el.addEventListener('dragstart',()=>{dragSrc=i;setTimeout(()=>el.classList.add('dragging'),0)});
+    el.addEventListener('dragend',()=>el.classList.remove('dragging'));
+    el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over')});
+    el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');if(dragSrc===null||dragSrc===i)return;const moved=images.splice(dragSrc,1)[0];images.splice(i,0,moved);dragSrc=null;renderPreviews()});
+    el.querySelector('.preview-remove').addEventListener('click',()=>{URL.revokeObjectURL(images[i].url);images.splice(i,1);renderPreviews();hideAll()});
+    previewGrid.appendChild(el);
+  });
+}
+
+function addImages(files){
+  for(const f of files){
+    if(!f.type.startsWith('image/'))continue;
+    const url=URL.createObjectURL(f);
+    images.push({file:f,url});
+  }
+  renderPreviews();hideAll();resetBtn.style.display='none';
+}
+
+fileInput.addEventListener('change',e=>{addImages(e.target.files);fileInput.value=''});
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('over')});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('over'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('over');addImages(e.dataTransfer.files)});
+resetBtn.addEventListener('click',()=>{images.forEach(i=>URL.revokeObjectURL(i.url));images=[];renderPreviews();hideAll();resetBtn.style.display='none'});
+
+convertBtn.addEventListener('click',async()=>{
+  if(images.length===0)return;
+  hideAll();convertBtn.disabled=true;progressWrap.classList.add('visible');progressFill.style.width='0%';
+  const pageSize=document.getElementById('pageSize').value;
+  const orientation=document.getElementById('orientation').value;
+  try{
+    const {PDFDocument}=PDFLib;
+    const pdf=await PDFDocument.create();
+    for(let i=0;i<images.length;i++){
+      progressLabel.textContent=`Embedding image ${i+1} of ${images.length}…`;
+      progressFill.style.width=((i/images.length)*90)+'%';
+      const f=images[i].file;
+      const buf=await f.arrayBuffer();
+      const bytes=new Uint8Array(buf);
+      let img;
+      if(f.type==='image/png'){img=await pdf.embedPng(bytes)}
+      else{
+        // convert to jpeg via canvas for non-jpg formats
+        const bmp=await createImageBitmap(f);
+        const c=document.createElement('canvas');c.width=bmp.width;c.height=bmp.height;
+        const ctx=c.getContext('2d');ctx.drawImage(bmp,0,0);
+        const dUrl=c.toDataURL('image/jpeg',0.92);
+        const b64=dUrl.split(',')[1];
+        img=await pdf.embedJpg(Uint8Array.from(atob(b64),ch=>ch.charCodeAt(0)));
+      }
+      let pw,ph;
+      if(pageSize==='auto'){pw=img.width;ph=img.height}
+      else{[pw,ph]=PAGE_SIZES[pageSize];if(orientation==='landscape')[pw,ph]=[ph,pw]}
+      const page=pdf.addPage([pw,ph]);
+      // fit image inside page maintaining aspect ratio
+      const scale=Math.min(pw/img.width,ph/img.height);
+      const w=img.width*scale,h=img.height*scale;
+      page.drawImage(img,{x:(pw-w)/2,y:(ph-h)/2,width:w,height:h});
+    }
+    progressLabel.textContent='Saving PDF…';progressFill.style.width='95%';
+    const bytes=await pdf.save();
+    progressFill.style.width='100%';
+    progressWrap.classList.remove('visible');
+    const blob=new Blob([bytes],{type:'application/pdf'});
+    dlBtn.href=URL.createObjectURL(blob);dlBtn.download='images.pdf';
+    successMsg.textContent=`Done! ${images.length} page${images.length!==1?'s':''} · ${fmt(bytes.length)}`;
+    statusSuccess.classList.add('visible');dlBtn.classList.add('visible');resetBtn.style.display='block';convertBtn.disabled=false;
+  }catch(e){showError('Error: '+(e.message||'Unknown'));convertBtn.disabled=false}
+});
+</script>
+</body>
+</html>

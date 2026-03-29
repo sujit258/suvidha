@@ -1,0 +1,422 @@
+(() => {
+  if (document.querySelector('.site-nav-shell')) return;
+
+  const appName = 'Suvidha';
+  const appNameLong = 'Suvidha Tools';
+  const companyName = 'Zenskar Labs';
+  const companyTagline = 'Ancient Wisdom. Modern Innovation';
+  const themeStorageKey = 'suvidha-theme';
+  const normalizedPath = decodeURIComponent(location.pathname.replace(/\\/g, '/')).toLowerCase();
+  const currentFile = decodeURIComponent(location.pathname.split('/').pop() || 'index.html').toLowerCase() || 'index.html';
+  const isHome = normalizedPath.endsWith('/index.html') || (currentFile === 'index.html' && !normalizedPath.includes('/pages/'));
+  const homePrefix = isHome ? '' : '../../';
+  const brandMarkPath = new URL('../brand/zenskar-mark.svg', import.meta.url).href;
+  const faviconPath = new URL('../brand/zenskar-mark.svg', import.meta.url).href;
+
+  const pageGroups = [
+    {
+      label: 'PDF',
+      anchor: '#pdf-tools',
+      pages: [
+        { path: 'pages/pdf/pdf-unlock.html', file: 'pdf-unlock.html', label: 'PDF Unlocker', icon: '🔓' },
+        { path: 'pages/pdf/pdf-merger.html', file: 'pdf-merger.html', label: 'PDF Merger', icon: '📎' },
+        { path: 'pages/pdf/pdf-compressor.html', file: 'pdf-compressor.html', label: 'PDF Compressor', icon: '📉' }
+      ]
+    },
+    {
+      label: 'Image',
+      anchor: '#image-tools',
+      pages: [
+        { path: 'pages/image/image-to-pdf.html', file: 'image-to-pdf.html', label: 'Image to PDF', icon: '🖼️' },
+        { path: 'pages/image/image-compressor.html', file: 'image-compressor.html', label: 'Image Compressor', icon: '🗜️' }
+      ]
+    },
+    {
+      label: 'Utility',
+      anchor: '#utility-tools',
+      pages: [
+        { path: 'pages/utility/qr-generator.html', file: 'qr-generator.html', label: 'QR Generator', icon: '▦' }
+      ]
+    },
+    {
+      label: 'Finance',
+      anchor: '#finance-tools',
+      pages: [
+        { path: 'pages/finance/emi-calculator.html', file: 'emi-calculator.html', label: 'EMI Calculator', icon: '🏦' },
+        { path: 'pages/finance/gst-calculator.html', file: 'gst-calculator.html', label: 'GST Calculator', icon: '🧾' },
+        { path: 'pages/finance/sip-calculator.html', file: 'sip-calculator.html', label: 'SIP Calculator', icon: '📈' }
+      ]
+    }
+  ];
+
+  const currentGroup = pageGroups.find(group => group.pages.some(page => page.file === currentFile));
+  const currentPage = currentGroup?.pages.find(page => page.file === currentFile) || { label: 'Home', icon: '✦' };
+  const totalTools = pageGroups.reduce((count, group) => count + group.pages.length, 0);
+
+  const ensureBrandMeta = () => {
+    const relTitle = document.title || (isHome ? appNameLong : currentPage.label);
+    if (!relTitle.toLowerCase().includes('suvidha')) {
+      document.title = isHome ? `${appNameLong} — by ${companyName}` : `${currentPage.label} | ${appNameLong}`;
+    }
+    let icon = document.querySelector('link[rel="icon"]');
+    if (!icon) {
+      icon = document.createElement('link');
+      icon.rel = 'icon';
+      document.head.appendChild(icon);
+    }
+    icon.href = faviconPath;
+    icon.type = 'image/svg+xml';
+  };
+
+  ensureBrandMeta();
+
+  const sectionHref = anchor => isHome ? anchor : `${homePrefix}index.html${anchor}`;
+  const groupHref = group => isHome ? group.anchor : pageHref(group.pages[0].path);
+  const pageHref = pagePath => {
+    if (normalizedPath.endsWith(`/${pagePath}`)) return '#';
+    return `${homePrefix}${pagePath}`;
+  };
+
+  const style = document.createElement('style');
+  style.id = 'shared-ui-styles';
+  style.textContent = `
+    :root,
+    html[data-theme='light']{
+      --bg:#f6f8fc !important;
+      --surface:#ffffff !important;
+      --surface2:#f1f5fb !important;
+      --border:#d9e2ef !important;
+      --text:#1e293b !important;
+      --muted:#64748b !important;
+      --accent:#2563eb !important;
+      --accent2:#7c3aed !important;
+      --accent3:#16a34a !important;
+      --hover-bg:#e9f0fb !important;
+      --overlay-bg:rgba(4,6,12,.52) !important;
+      --nav-bg:rgba(255,255,255,.9) !important;
+      --nav-shadow:0 14px 44px rgba(15,23,42,.12) !important;
+      --grid-opacity:.06 !important;
+    }
+    html[data-theme='dark']{
+      --bg:#0d1117 !important;
+      --surface:#161b22 !important;
+      --surface2:#21262d !important;
+      --border:#30363d !important;
+      --text:#e6edf3 !important;
+      --muted:#9aa4b2 !important;
+      --accent:#58a6ff !important;
+      --accent2:#a78bfa !important;
+      --accent3:#3fb950 !important;
+      --hover-bg:#263140 !important;
+      --overlay-bg:rgba(2,6,12,.66) !important;
+      --nav-bg:rgba(22,27,34,.92) !important;
+      --nav-shadow:0 18px 52px rgba(0,0,0,.35) !important;
+      --grid-opacity:.16 !important;
+    }
+    body{background:var(--bg) !important;color:var(--text) !important}
+    body::before{opacity:var(--grid-opacity) !important}
+    .card,.how,.hero-copy,.hero-panel,.workflow-card,.section-panel,.tool-card,.cta-band,.result-card,.rbox,.hero-box,.result-box,.stat,.file-item,.drop-zone,.file-info,.breakdown,.compare-panel{background:var(--surface) !important;border-color:var(--border) !important;color:var(--text) !important}
+    .drop-zone,.input-row,input[type=number],input[type=text],input[type=url],input[type=tel],input[type=password],textarea,select,.mode-btn,.rate-btn,.tab,.fmt-btn,.q-btn,.site-mobile-home,.site-mobile-anchor,.site-mobile-company{background:var(--surface2) !important;border-color:var(--border) !important;color:var(--text) !important}
+    .tool-desc,.sub,.hero-sub,.panel-copy,.section-copy,.rbox-label,.result-box-label,.field-label,.site-tool-meta,.site-mobile-sub,.site-brand-title,.site-brand-copy,.site-brand{color:var(--text)}
+    .eyebrow,.section-kicker,.panel-kicker,.site-brand-meta,.site-brand-sub,.site-tool-meta,.site-mobile-sub,.company-tagline,.footer{color:var(--muted) !important}
+    .site-nav,.site-mobile-drawer,.site-tools-dropdown{background:var(--nav-bg) !important;border-color:var(--border) !important;box-shadow:var(--nav-shadow) !important}
+    .site-nav-link,.site-tools-trigger,.site-nav-chip,.site-mobile-toggle{color:var(--text) !important}
+    .site-nav-link:hover,.site-nav-link.is-active,.site-tools-trigger:hover,.site-tools-trigger[aria-expanded='true'],.site-tool-link:hover,.site-tool-link.is-active{background:var(--hover-bg) !important}
+    .site-brand-mark{background:var(--surface) !important}
+    .theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s ease}
+    .theme-toggle:hover{background:var(--hover-bg)}
+    .theme-toggle .theme-icon{font-size:14px;line-height:1}
+    .theme-toggle.mobile{width:100%;margin-bottom:10px;justify-content:space-between}
+    body.has-site-nav{padding-top:0 !important;}
+    .site-nav-shell{position:fixed;top:16px;left:20px;right:20px;z-index:9999;pointer-events:none}
+    .site-nav-spacer{height:96px;width:100%;flex:0 0 auto}
+    .site-nav{pointer-events:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1180px;margin:0 auto;padding:14px 18px;border:1px solid color-mix(in srgb,var(--border) 80%, transparent);border-radius:20px;background:color-mix(in srgb,var(--surface, #141416) 78%, transparent);backdrop-filter:blur(18px);box-shadow:0 16px 50px rgba(0,0,0,0.18)}
+    .site-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;min-width:0}
+    .site-brand-mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 78%, transparent);border:1px solid color-mix(in srgb,var(--border) 76%, transparent);box-shadow:0 10px 24px color-mix(in srgb,var(--accent, #58a6ff) 18%, transparent);overflow:hidden;padding:7px}
+    .site-brand-mark img{width:100%;height:100%;object-fit:contain;display:block}
+    .site-brand-title{font-size:15px;font-weight:700;letter-spacing:-0.02em;color:var(--text);white-space:nowrap}
+    .site-nav-desktop{display:flex;align-items:center;gap:10px}
+    .site-nav-link,.site-tools-trigger{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 14px;border-radius:999px;border:1px solid transparent;text-decoration:none;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s ease;font-family:inherit}
+    .site-nav-link:hover,.site-nav-link.is-active,.site-tools-trigger:hover,.site-tools-trigger[aria-expanded='true']{color:var(--text);background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 78%, transparent);border-color:color-mix(in srgb,var(--border) 70%, transparent)}
+    .site-tools-menu{position:relative}
+    .site-tools-dropdown{position:absolute;top:calc(100% + 10px);right:0;width:min(440px,calc(100vw - 48px));padding:16px;border-radius:20px;border:1px solid color-mix(in srgb,var(--border) 82%, transparent);background:color-mix(in srgb,var(--surface, #141416) 96%, transparent);backdrop-filter:blur(20px);box-shadow:0 22px 60px rgba(0,0,0,.22);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .2s ease;pointer-events:none}
+    .site-tools-menu:hover .site-tools-dropdown,.site-tools-menu.is-open .site-tools-dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:auto}
+    .site-tool-group{padding:4px}
+    .site-tool-group-label{display:block;margin-bottom:8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .site-tool-link{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;text-decoration:none;color:var(--text);transition:all .18s ease}
+    .site-tool-link:hover,.site-tool-link.is-active{background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 86%, transparent)}
+    .site-tool-icon{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 88%, transparent);font-size:14px;flex-shrink:0}
+    .site-tool-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .site-tool-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .site-tool-meta{font-size:11px;color:var(--muted)}
+    .site-nav-actions{display:flex;align-items:center;gap:10px}
+    .site-nav-chip{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--border) 70%, transparent);text-decoration:none;color:var(--text);font-size:12px;font-weight:700;background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 82%, transparent)}
+    .site-nav-chip span{font-size:11px;color:var(--muted);font-weight:500}
+    .site-mobile-toggle{display:none;width:44px;height:44px;border-radius:14px;border:1px solid color-mix(in srgb,var(--border) 70%, transparent);background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 82%, transparent);color:var(--text);cursor:pointer;align-items:center;justify-content:center}
+    .site-mobile-toggle svg{width:18px;height:18px}
+    .site-mobile-overlay{position:fixed;inset:0;background:var(--overlay-bg);backdrop-filter:blur(4px);z-index:9997;opacity:0;visibility:hidden;transition:all .2s ease}
+    .site-mobile-overlay.is-open{opacity:1;visibility:visible}
+    .site-mobile-drawer{position:fixed;top:12px;right:12px;bottom:12px;width:min(360px,calc(100vw - 24px));padding:18px;border:1px solid color-mix(in srgb,var(--border) 85%, transparent);border-radius:24px;background:color-mix(in srgb,var(--surface, #141416) 97%, transparent);backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.26);z-index:9998;transform:translateX(108%);transition:transform .24s ease;overflow:auto}
+    .site-mobile-drawer.is-open{transform:translateX(0)}
+    .site-mobile-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .site-mobile-title{font-size:18px;font-weight:700;letter-spacing:-0.02em;color:var(--text)}
+    .site-mobile-sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .site-mobile-company{margin:12px 0 14px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 75%, transparent);border:1px solid color-mix(in srgb,var(--border) 65%, transparent)}
+    .site-mobile-company strong{display:block;font-size:13px;color:var(--text)}
+    .site-mobile-company span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+    .site-mobile-close{width:40px;height:40px;border:none;border-radius:12px;background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 88%, transparent);color:var(--text);cursor:pointer}
+    .site-mobile-home,.site-mobile-anchor{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;margin-bottom:10px;border-radius:16px;border:1px solid color-mix(in srgb,var(--border) 72%, transparent);text-decoration:none;color:var(--text);background:color-mix(in srgb,var(--surface2, var(--surface, #1e1e22)) 72%, transparent)}
+    .site-mobile-anchor-list{display:grid;gap:8px;margin-bottom:14px}
+    .site-mobile-group{padding:14px 0;border-top:1px solid color-mix(in srgb,var(--border) 56%, transparent)}
+    .site-mobile-group:first-of-type{border-top:none;padding-top:4px}
+    .site-mobile-group-label{display:block;margin-bottom:10px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .site-mobile-tool{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;text-decoration:none;color:var(--text);border-bottom:1px solid color-mix(in srgb,var(--border) 38%, transparent)}
+    .site-mobile-tool:last-child{border-bottom:none;padding-bottom:0}
+    .site-mobile-tool-info{display:flex;align-items:center;gap:10px;min-width:0}
+    .site-mobile-tool-arrow{color:var(--muted);font-size:14px}
+    .page-crumb{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 18px;padding:10px 14px;border:1px solid color-mix(in srgb,var(--border) 70%, transparent);border-radius:16px;background:color-mix(in srgb,var(--surface, #141416) 84%, transparent);font-size:12px;color:var(--muted);backdrop-filter:blur(10px)}
+    .page-crumb a{color:var(--text);text-decoration:none;font-weight:600}
+    .page-crumb strong{color:var(--text)}
+    .global-footer-wrap{max-width:1180px;margin:34px auto 14px;padding:0 22px}
+    .global-footer{border:1px solid var(--border);background:var(--surface);border-radius:24px;padding:22px 22px 16px;box-shadow:var(--nav-shadow)}
+    .global-footer-top{display:grid;grid-template-columns:1.2fr .9fr;gap:20px;align-items:start}
+    .gf-title{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--text);margin-bottom:6px}
+    .gf-sub{font-size:13px;color:var(--muted);line-height:1.7}
+    .gf-links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .gf-link{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);background:var(--surface2);border-radius:12px;text-decoration:none;color:var(--text);font-size:12px;font-weight:600;transition:all .2s ease}
+    .gf-link span{color:var(--muted);font-family:'Syne Mono',monospace;font-size:11px}
+    .gf-link:hover{background:var(--hover-bg)}
+    .gf-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .gf-badge{padding:7px 10px;border:1px solid var(--border);border-radius:999px;background:var(--surface2);font:11px 'Syne Mono',monospace;color:var(--muted)}
+    .gf-bottom{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font:11px 'Syne Mono',monospace}
+    @media (max-width: 960px){
+      .site-nav-desktop,.site-nav-chip{display:none}
+      .site-mobile-toggle{display:inline-flex}
+    }
+    @media (max-width: 760px){
+      .content{max-width:100% !important}
+      .card,.how{padding:20px !important}
+      .settings,.result-grid,.result-hero,.result-row-grid,.result-rows,.quality-grid,.stats.visible,.result-stats.visible,.compare.visible{grid-template-columns:1fr !important}
+      .tabs{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+      .rate-grid{grid-template-columns:repeat(3,minmax(0,1fr)) !important}
+      .dl-row,.fmt-row{flex-direction:column !important}
+      .drop-zone{padding:24px 18px !important}
+      .compare-panel img{height:140px !important}
+      .result-card,.hero-box,.result-box,.rbox,.stat{padding:14px !important}
+    }
+    @media (max-width: 520px){
+      .site-nav-shell{top:12px;left:12px;right:12px}
+      .site-nav{padding:12px 14px;border-radius:18px}
+      .site-nav-spacer{height:88px}
+      .site-brand-mark{width:38px;height:38px;border-radius:12px}
+      .site-brand-title{font-size:14px}
+      .tabs,.mode-row{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+      .rate-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+      .breakdown-row,.file-info,.compare-label,.slider-row{flex-direction:column;align-items:flex-start}
+      body.has-site-nav{padding-left:14px !important;padding-right:14px !important}
+      .header{margin-bottom:28px !important}
+      .global-footer-wrap{margin-top:28px;padding:0 14px}
+      .global-footer{padding:18px 16px 14px;border-radius:18px}
+      .global-footer-top{grid-template-columns:1fr}
+      .gf-links{grid-template-columns:1fr}
+    }
+  `;
+  document.head.appendChild(style);
+  document.body.classList.add('has-site-nav');
+
+  const desktopGroups = pageGroups.map(group => `
+    <div class="site-tool-group">
+      <span class="site-tool-group-label">${group.label}</span>
+      ${group.pages.map(page => `
+        <a class="site-tool-link${page.file === currentFile ? ' is-active' : ''}" href="${pageHref(page.path)}">
+          <span class="site-tool-icon">${page.icon}</span>
+          <span class="site-tool-copy">
+            <span class="site-tool-title">${page.label}</span>
+            <span class="site-tool-meta">${group.label} tool</span>
+          </span>
+        </a>
+      `).join('')}
+    </div>
+  `).join('');
+
+  const mobileGroups = pageGroups.map(group => `
+    <div class="site-mobile-group">
+      <span class="site-mobile-group-label">${group.label}</span>
+      ${group.pages.map(page => `
+        <a class="site-mobile-tool" href="${pageHref(page.path)}">
+          <span class="site-mobile-tool-info">
+            <span class="site-tool-icon">${page.icon}</span>
+            <span class="site-tool-copy">
+              <span class="site-tool-title">${page.label}</span>
+              <span class="site-tool-meta">${group.label} tool</span>
+            </span>
+          </span>
+          <span class="site-mobile-tool-arrow">→</span>
+        </a>
+      `).join('')}
+    </div>
+  `).join('');
+
+  const navHtml = `
+    <div class="site-nav-shell">
+      <div class="site-nav">
+        <a class="site-brand" href="${isHome ? '#top' : `${homePrefix}index.html`}" aria-label="Go to ${appName} home">
+          <span class="site-brand-mark"><img src="${brandMarkPath}" alt="${companyName} logo"></span>
+          <span class="site-brand-title">${appNameLong}</span>
+        </a>
+        <nav class="site-nav-desktop" aria-label="Primary navigation">
+          <a class="site-nav-link${isHome ? ' is-active' : ''}" href="${isHome ? '#top' : `${homePrefix}index.html`}">Home</a>
+          ${pageGroups.map(group => `<a class="site-nav-link" href="${groupHref(group)}">${group.label}</a>`).join('')}
+          <div class="site-tools-menu" id="siteToolsMenu">
+            <button class="site-tools-trigger" id="siteToolsTrigger" type="button" aria-expanded="false">All tools</button>
+            <div class="site-tools-dropdown">${desktopGroups}</div>
+          </div>
+        </nav>
+        <div class="site-nav-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle><span class="theme-icon">🌙</span><span class="theme-text">Dark</span></button>
+          <a class="site-nav-chip" href="${isHome ? '#finance-tools' : `${homePrefix}index.html#finance-tools`}">Quick access <span>${currentPage.label}</span></a>
+          <button class="site-mobile-toggle" id="siteMobileToggle" type="button" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="site-nav-spacer" aria-hidden="true"></div>
+    <div class="site-mobile-overlay" id="siteMobileOverlay"></div>
+    <aside class="site-mobile-drawer" id="siteMobileDrawer" aria-label="Mobile navigation">
+      <div class="site-mobile-head">
+        <div>
+          <div class="site-mobile-title">${appNameLong}</div>
+          <div class="site-mobile-sub">${currentGroup ? `${currentGroup.label} · ${currentPage.label}` : 'Private web toolkit'}</div>
+        </div>
+        <button class="site-mobile-close" id="siteMobileClose" type="button" aria-label="Close menu">✕</button>
+      </div>
+      <div class="site-mobile-company"><strong>${companyName}</strong><span>${companyTagline}</span></div>
+      <button class="theme-toggle mobile" type="button" data-theme-toggle><span><span class="theme-icon">🌙</span> <span class="theme-text">Dark</span></span><strong>Theme</strong></button>
+      <a class="site-mobile-home" href="${isHome ? '#top' : `${homePrefix}index.html`}">
+        <span>Go to home</span>
+        <strong>${totalTools} tools</strong>
+      </a>
+      <div class="site-mobile-anchor-list">
+        ${pageGroups.map(group => `<a class="site-mobile-anchor" href="${groupHref(group)}"><span>${group.label}</span><strong>View</strong></a>`).join('')}
+      </div>
+      ${mobileGroups}
+    </aside>
+  `;
+
+  document.body.insertAdjacentHTML('afterbegin', navHtml);
+
+  if (!document.querySelector('.global-footer-wrap')) {
+    const footerWrap = document.createElement('div');
+    footerWrap.className = 'global-footer-wrap';
+    const year = new Date().getFullYear();
+    footerWrap.innerHTML = `
+      <footer class="global-footer">
+        <div class="global-footer-top">
+          <div>
+            <div class="gf-title">Built with love 😊</div>
+            <div class="gf-sub">Built by Zenskar Labs · ${companyTagline}</div>
+            <div class="gf-badges">
+              <span class="gf-badge">Fast web tools</span>
+              <span class="gf-badge">Mobile friendly</span>
+              <span class="gf-badge">Simple UI</span>
+            </div>
+          </div>
+          <div class="gf-links">
+            <a class="gf-link" href="${groupHref(pageGroups[0])}">PDF Tools <span>Open</span></a>
+            <a class="gf-link" href="${groupHref(pageGroups[1])}">Image Tools <span>Open</span></a>
+            <a class="gf-link" href="${groupHref(pageGroups[2])}">Utility <span>Open</span></a>
+            <a class="gf-link" href="${groupHref(pageGroups[3])}">Finance <span>Open</span></a>
+          </div>
+        </div>
+        <div class="gf-bottom">
+          <span>© ${year} Zenskar Labs</span>
+          <span>Ancient Wisdom. Modern Innovation</span>
+        </div>
+      </footer>
+    `;
+    document.body.appendChild(footerWrap);
+  }
+
+  if (!isHome) {
+    const header = document.querySelector('.content .header, .header');
+    if (header) {
+      header.insertAdjacentHTML('beforebegin', `
+        <div class="page-crumb">
+          <a href="${homePrefix}index.html">${appName} home</a>
+          <span>•</span>
+          <a href="${homePrefix}index.html${currentGroup?.anchor || ''}">${currentGroup?.label || 'Tools'}</a>
+          <span>•</span>
+          <strong>${currentPage.label}</strong>
+        </div>
+      `);
+    }
+  }
+
+  const toolsMenu = document.getElementById('siteToolsMenu');
+  const toolsTrigger = document.getElementById('siteToolsTrigger');
+  const mobileToggle = document.getElementById('siteMobileToggle');
+  const mobileDrawer = document.getElementById('siteMobileDrawer');
+  const mobileOverlay = document.getElementById('siteMobileOverlay');
+  const mobileClose = document.getElementById('siteMobileClose');
+  const themeToggles = document.querySelectorAll('[data-theme-toggle]');
+
+  const getPreferredTheme = () => {
+    const savedTheme = localStorage.getItem(themeStorageKey);
+    if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+
+  const applyTheme = theme => {
+    const nextTheme = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem(themeStorageKey, nextTheme);
+    const isDark = nextTheme === 'dark';
+    themeToggles.forEach(btn => {
+      const icon = btn.querySelector('.theme-icon');
+      const text = btn.querySelector('.theme-text');
+      if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+      if (text) text.textContent = isDark ? 'Light' : 'Dark';
+      btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    });
+  };
+
+  applyTheme(getPreferredTheme());
+
+  const closeMobile = () => {
+    mobileDrawer.classList.remove('is-open');
+    mobileOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  };
+
+  const openMobile = () => {
+    mobileDrawer.classList.add('is-open');
+    mobileOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  mobileToggle?.addEventListener('click', openMobile);
+  mobileClose?.addEventListener('click', closeMobile);
+  mobileOverlay?.addEventListener('click', closeMobile);
+  mobileDrawer?.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMobile));
+  themeToggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const activeTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      applyTheme(activeTheme === 'dark' ? 'light' : 'dark');
+    });
+  });
+
+  toolsTrigger?.addEventListener('click', event => {
+    event.preventDefault();
+    const open = toolsMenu.classList.toggle('is-open');
+    toolsTrigger.setAttribute('aria-expanded', String(open));
+  });
+
+  document.addEventListener('click', event => {
+    if (toolsMenu && !toolsMenu.contains(event.target)) {
+      toolsMenu.classList.remove('is-open');
+      toolsTrigger?.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
