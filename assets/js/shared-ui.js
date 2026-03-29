@@ -314,12 +314,13 @@
       <footer class="global-footer">
         <div class="global-footer-top">
           <div>
-            <div class="gf-title">Built with love 😊</div>
-            <div class="gf-sub">Built by Zenskar Labs · ${companyTagline}</div>
+            <div class="gf-title">Suvidha Tools</div>
+            <div class="gf-sub">A private web toolkit by ${companyName} · ${companyTagline}</div>
             <div class="gf-badges">
-              <span class="gf-badge">Fast web tools</span>
-              <span class="gf-badge">Mobile friendly</span>
-              <span class="gf-badge">Simple UI</span>
+              <span class="gf-badge">Zero uploads</span>
+              <span class="gf-badge">Works offline</span>
+              <span class="gf-badge">Mobile ready</span>
+              <span class="gf-badge">No signup</span>
             </div>
           </div>
           <div class="gf-links">

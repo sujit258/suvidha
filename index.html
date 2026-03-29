@@ -19,7 +19,8 @@ a{color:inherit}
 .hero-copy{padding:40px;border-radius:32px;position:relative;overflow:hidden}
 .hero-copy::before{content:'';position:absolute;inset:auto -80px -90px auto;width:220px;height:220px;background:radial-gradient(circle,rgba(245,158,11,.18),transparent 68%)}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font:11px 'Syne Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#d7d2ff;margin-bottom:22px}
-.eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent3);box-shadow:0 0 0 6px rgba(34,197,94,.12)}
+.eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent3);animation:pulse-dot 2.4s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}65%{box-shadow:0 0 0 10px rgba(34,197,94,0)}}
 h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-width:9ch;margin-bottom:18px}
 .accent{background:linear-gradient(135deg,#c4b5fd 0%,#f59e0b 55%,#f97316 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{max-width:54ch;color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:26px}
@@ -76,6 +77,23 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .hero,.workflow-grid,.section,.cta-band{animation:fadeUp .5s ease both}
 .section:nth-of-type(2){animation-delay:.08s}.section:nth-of-type(3){animation-delay:.16s}.section:nth-of-type(4){animation-delay:.24s}
+#pdf-tools .tool-card:hover{box-shadow:0 0 0 1px rgba(239,68,68,.3),0 24px 60px rgba(239,68,68,.12)}
+#image-tools .tool-card:hover{box-shadow:0 0 0 1px rgba(245,158,11,.3),0 24px 60px rgba(245,158,11,.12)}
+#utility-tools .tool-card:hover{box-shadow:0 0 0 1px rgba(56,189,248,.3),0 24px 60px rgba(56,189,248,.12)}
+#finance-tools .tool-card:hover{box-shadow:0 0 0 1px rgba(34,197,94,.3),0 24px 60px rgba(34,197,94,.12)}
+#pdf-tools .section-panel{border-top:2px solid rgba(239,68,68,.32)}
+#image-tools .section-panel{border-top:2px solid rgba(245,158,11,.32)}
+#utility-tools .section-panel{border-top:2px solid rgba(56,189,248,.32)}
+#finance-tools .section-panel{border-top:2px solid rgba(34,197,94,.32)}
+#pdf-tools .section-kicker{color:#fca5a5}
+#image-tools .section-kicker{color:#fcd34d}
+#utility-tools .section-kicker{color:#7dd3fc}
+#finance-tools .section-kicker{color:#86efac}
+.cta-band{margin-top:24px;padding:40px 40px;border-radius:30px;display:grid;grid-template-columns:minmax(0,1.2fr) auto;gap:24px;align-items:center;background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(245,158,11,0.06));border:1px solid var(--border);box-shadow:0 24px 60px rgba(0,0,0,.22);position:relative;overflow:hidden}
+.cta-band::before{content:'';position:absolute;inset:-1px;border-radius:30px;background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(245,158,11,.08),transparent 60%);pointer-events:none}
+.cta-title{font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.04em;margin-bottom:10px}
+.cta-copy{color:var(--muted);line-height:1.7;max-width:58ch;font-size:15px}
+.cta-meta{font:11px 'Syne Mono',monospace;color:var(--muted);margin-top:16px;letter-spacing:.08em}
 @media (max-width: 1024px){.hero,.workflow-grid,.tools-grid,.cta-band{grid-template-columns:1fr 1fr}.hero{grid-template-columns:1fr}.cta-band{grid-template-columns:1fr}}
 @media (max-width: 760px){.home-shell{padding:0 18px}.hero-copy,.hero-panel,.workflow-card,.section-panel,.tool-card,.cta-band{padding:22px;border-radius:24px}.workflow-grid,.tools-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}.hero-actions{flex-direction:column;align-items:stretch}.btn{width:100%}.section-head{align-items:flex-start}.pill,.section-count{width:max-content}}
 @media (max-width: 520px){.home-shell{padding:0 14px}h1{font-size:clamp(2.5rem,14vw,3.8rem)}.stats-grid{grid-template-columns:1fr}.hero-pills{gap:8px}.tool-top{align-items:center}.tool-chip{align-self:flex-start}}
@@ -101,39 +119,39 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
     </div>
     <aside class="hero-panel">
       <div>
-        <div class="panel-kicker">Snapshot</div>
-        <h2 class="panel-title">9 responsive utilities, one shared Suvidha menu.</h2>
-        <p class="panel-copy">The home page is now organized by workflow, and every subpage includes the same navigation for faster switching on desktop and mobile.</p>
+        <div class="panel-kicker">Why Suvidha</div>
+        <h2 class="panel-title">Private by design. Fast by default.</h2>
+        <p class="panel-copy">Every tool processes files directly in your browser using Web APIs — nothing ever leaves your device.</p>
       </div>
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-value">9</div><div class="stat-label">Tools</div></div>
-        <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Categories</div></div>
-        <div class="stat-card"><div class="stat-value">Cloud</div><div class="stat-label">Online ready</div></div>
-        <div class="stat-card"><div class="stat-value">Mobile</div><div class="stat-label">Ready</div></div>
+        <div class="stat-card"><div class="stat-value" style="background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">9</div><div class="stat-label">Tools</div></div>
+        <div class="stat-card"><div class="stat-value" style="background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">4</div><div class="stat-label">Categories</div></div>
+        <div class="stat-card"><div class="stat-value" style="font-size:1.3rem;background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0 KB</div><div class="stat-label">Uploaded</div></div>
+        <div class="stat-card"><div class="stat-value" style="font-size:1.3rem;background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Free</div><div class="stat-label">Always</div></div>
       </div>
       <div class="panel-list">
-        <div class="panel-item"><span>Common navigation across every page</span><span>Menu</span></div>
-        <div class="panel-item"><span>Cleaner section hierarchy and workflows</span><span>Index</span></div>
-        <div class="panel-item"><span>Responsive layouts for narrow screens</span><span>UX</span></div>
+        <div class="panel-item"><span>🔒 Files never leave your browser</span><span style="color:#86efac">✓</span></div>
+        <div class="panel-item"><span>⚡ Works offline after first load</span><span style="color:#86efac">✓</span></div>
+        <div class="panel-item"><span>📱 Responsive on any screen size</span><span style="color:#86efac">✓</span></div>
       </div>
     </aside>
   </section>
 
   <section class="workflow-grid" aria-label="Popular workflows">
     <a class="workflow-card" href="pages/pdf/pdf-merger.html">
-      <div class="workflow-icon">📎</div>
+      <div class="workflow-icon" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.18)">📎</div>
       <div class="workflow-title">Manage PDFs faster</div>
       <p class="workflow-copy">Unlock, merge, or compress files without leaving the browser.</p>
       <div class="workflow-link">Open PDF tools →</div>
     </a>
     <a class="workflow-card" href="pages/image/image-compressor.html">
-      <div class="workflow-icon">🖼️</div>
+      <div class="workflow-icon" style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.18)">🖼️</div>
       <div class="workflow-title">Optimize images instantly</div>
       <p class="workflow-copy">Compress photos or convert multiple images into a single shareable PDF.</p>
       <div class="workflow-link">Open image tools →</div>
     </a>
     <a class="workflow-card" href="pages/finance/sip-calculator.html">
-      <div class="workflow-icon">📈</div>
+      <div class="workflow-icon" style="background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.18)">📈</div>
       <div class="workflow-title">Run finance calculations</div>
       <p class="workflow-copy">Check EMI, GST, and SIP projections with clear summaries and charts.</p>
       <div class="workflow-link">Open calculators →</div>
@@ -262,6 +280,18 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
       </a>
     </div>
   </section>
+
+  <div class="cta-band">
+    <div>
+      <h2 class="cta-title">Everything runs <span class="accent">in your browser</span></h2>
+      <p class="cta-copy">No accounts, no server uploads, no trackers. Your files stay on your device — by design, not by promise.</p>
+      <p class="cta-meta">9 tools &nbsp;·&nbsp; 4 categories &nbsp;·&nbsp; zero data sent</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center;flex-shrink:0">
+      <a class="btn btn-primary" href="#pdf-tools" style="min-width:180px">Start using tools</a>
+      <a class="btn btn-secondary" href="#finance-tools" style="min-width:180px">Jump to calculators</a>
+    </div>
+  </div>
 
 </main>
 </body>
