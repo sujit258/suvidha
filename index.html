@@ -71,9 +71,6 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
 .meta-pill{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);font:11px 'Syne Mono',monospace;color:var(--muted)}
 .tool-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06);font-size:13px;font-weight:600}
 .tool-footer span:last-child{color:#d9c7ff}
-.cta-band{margin-top:24px;padding:28px;border-radius:30px;display:grid;grid-template-columns:minmax(0,1.1fr) auto;gap:18px;align-items:center}
-.cta-title{font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.04em;margin-bottom:10px}
-.cta-copy{color:var(--muted);line-height:1.7;max-width:58ch}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 .hero,.workflow-grid,.section,.cta-band{animation:fadeUp .5s ease both}
 .section:nth-of-type(2){animation-delay:.08s}.section:nth-of-type(3){animation-delay:.16s}.section:nth-of-type(4){animation-delay:.24s}
@@ -94,9 +91,44 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
 .cta-title{font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.04em;margin-bottom:10px}
 .cta-copy{color:var(--muted);line-height:1.7;max-width:58ch;font-size:15px}
 .cta-meta{font:11px 'Syne Mono',monospace;color:var(--muted);margin-top:16px;letter-spacing:.08em}
-@media (max-width: 1024px){.hero,.workflow-grid,.tools-grid,.cta-band{grid-template-columns:1fr 1fr}.hero{grid-template-columns:1fr}.cta-band{grid-template-columns:1fr}}
-@media (max-width: 760px){.home-shell{padding:0 18px}.hero-copy,.hero-panel,.workflow-card,.section-panel,.tool-card,.cta-band{padding:22px;border-radius:24px}.workflow-grid,.tools-grid{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}.hero-actions{flex-direction:column;align-items:stretch}.btn{width:100%}.section-head{align-items:flex-start}.pill,.section-count{width:max-content}}
-@media (max-width: 520px){.home-shell{padding:0 14px}h1{font-size:clamp(2.5rem,14vw,3.8rem)}.stats-grid{grid-template-columns:1fr}.hero-pills{gap:8px}.tool-top{align-items:center}.tool-chip{align-self:flex-start}}
+@media (max-width: 1024px){.hero{grid-template-columns:1fr}.workflow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cta-band{grid-template-columns:1fr}}
+@media (max-width: 760px){
+  .home-shell{padding:0 16px}
+  .hero{padding:14px 0 20px;gap:14px}
+  .hero-panel{display:none}
+  .hero-copy{padding:24px;border-radius:22px}
+  .eyebrow{margin-bottom:14px;font-size:10px;padding:6px 12px}
+  h1{font-size:clamp(2.4rem,11vw,3.2rem);margin-bottom:12px}
+  .hero-sub{font-size:14px;margin-bottom:18px;line-height:1.6}
+  .hero-actions{flex-direction:row;gap:10px;margin-bottom:16px}
+  .btn{min-height:42px;padding:0 16px;font-size:14px;border-radius:14px}
+  .hero-pills{gap:8px}
+  .pill{font-size:11px;padding:6px 10px}
+  .workflow-grid{grid-template-columns:1fr;gap:10px;margin-bottom:16px}
+  .workflow-card,.section-panel,.tool-card,.cta-band{padding:18px;border-radius:18px}
+  .tools-grid{grid-template-columns:1fr;gap:12px}
+  .section{margin-top:16px}
+  .section-title{font-size:clamp(1.5rem,6vw,1.9rem)}
+  .section-copy{font-size:14px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .section-head{align-items:flex-start}
+  .pill,.section-count{width:max-content}
+  .cta-band{flex-direction:column;padding:24px}
+  .cta-title{font-size:clamp(1.5rem,7vw,1.9rem)}
+}
+@media (max-width: 520px){
+  .home-shell{padding:0 12px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .btn{width:100%}
+  h1{font-size:clamp(2.2rem,12vw,3rem)}
+  .stats-grid{grid-template-columns:1fr}
+  .hero-pills{gap:6px}
+  .tool-top{align-items:center}
+  .tool-chip{align-self:flex-start}
+  .workflow-card{flex-direction:row;align-items:center;gap:14px}
+  .workflow-copy{display:none}
+  .workflow-link{font-size:11px}
+}
 </style>
 </head>
 <body id="top">
@@ -105,16 +137,15 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
     <div class="hero-copy">
       <div class="eyebrow">Private by design · built for web</div>
       <h1>Suvidha for your <span class="accent">daily tools</span></h1>
-      <p class="hero-sub">A modern toolkit for quick document, image, QR, and finance tasks. Every tool runs locally in the browser, so your files stay on your device.</p>
+      <p class="hero-sub">A private browser-based toolkit for documents, images, QR codes, and finance. Nothing ever leaves your device.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#pdf-tools">Explore all tools</a>
-        <a class="btn btn-secondary" href="#finance-tools">Jump to calculators</a>
+        <a class="btn btn-primary" href="#pdf-tools">Explore tools</a>
+        <a class="btn btn-secondary" href="#finance-tools">Calculators</a>
       </div>
       <div class="hero-pills">
         <span class="pill">🔒 Zero uploads</span>
         <span class="pill">⚡ Fast on mobile</span>
-        <span class="pill">♻ Reusable workflows</span>
-        <span class="pill">✓ No signup</span>
+        <span class="pill">♻ No signup</span>
       </div>
     </div>
     <aside class="hero-panel">
