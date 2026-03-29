@@ -14,39 +14,34 @@ body{background:radial-gradient(circle at top,rgba(139,92,246,0.16),transparent 
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px);background-size:44px 44px;mask-image:radial-gradient(circle at center,black 45%,transparent 100%);opacity:.22;pointer-events:none}
 a{color:inherit}
 .home-shell{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 24px}
-.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:24px;align-items:stretch;padding:22px 0 38px}
-.hero-copy,.hero-panel,.workflow-card,.section-panel,.tool-card,.cta-band{background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid var(--border);box-shadow:0 24px 60px rgba(0,0,0,.22)}
-.hero-copy{padding:40px;border-radius:32px;position:relative;overflow:hidden}
-.hero-copy::before{content:'';position:absolute;inset:auto -80px -90px auto;width:220px;height:220px;background:radial-gradient(circle,rgba(245,158,11,.18),transparent 68%)}
-.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font:11px 'Syne Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#d7d2ff;margin-bottom:22px}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:26px 0 32px}
+.hero-inner{max-width:700px;width:100%}
+.hero-copy{background:none;border:none;box-shadow:none;padding:0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font:11px 'Syne Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#d7d2ff;margin-bottom:20px}
 .eyebrow::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent3);animation:pulse-dot 2.4s ease-in-out infinite}
 @keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}65%{box-shadow:0 0 0 10px rgba(34,197,94,0)}}
-h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-width:9ch;margin-bottom:18px}
+h1{font-size:clamp(2.8rem,6vw,4.8rem);line-height:.96;letter-spacing:-.06em;margin-bottom:16px}
 .accent{background:linear-gradient(135deg,#c4b5fd 0%,#f59e0b 55%,#f97316 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{max-width:54ch;color:var(--muted);font-size:16px;line-height:1.7;margin-bottom:26px}
-.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:26px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 20px;border-radius:16px;text-decoration:none;font-weight:700;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.hero-sub{max-width:52ch;margin:0 auto 22px;color:var(--muted);font-size:16px;line-height:1.7}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 22px;border-radius:16px;text-decoration:none;font-weight:700;transition:transform .2s ease,background .2s ease,border-color .2s ease}
 .btn-primary{background:linear-gradient(135deg,var(--accent),#6d28d9);color:#fff}
 .btn-primary:hover{transform:translateY(-2px)}
 .btn-secondary{background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text)}
 .btn-secondary:hover{background:var(--surface2)}
-.hero-pills{display:flex;gap:10px;flex-wrap:wrap}
+.hero-stat-strip{display:flex;align-items:center;justify-content:center;margin:0 auto 22px;padding:16px 28px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid var(--border);border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.22);width:100%}
+.hstat{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0}
+.hstat-val{font-size:1.75rem;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.hstat-lbl{font:10px 'Syne Mono',monospace;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.hstat-div{width:1px;height:36px;background:var(--border);flex-shrink:0;margin:0 4px}
+.hero-pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:var(--muted);font:12px 'Syne Mono',monospace}
-.hero-panel{padding:28px;border-radius:28px;display:flex;flex-direction:column;gap:18px}
-.panel-kicker,.section-kicker{font:11px 'Syne Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.panel-title{font-size:1.45rem;letter-spacing:-.03em}
-.panel-copy{color:var(--muted);font-size:14px;line-height:1.7}
-.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.stat-card{padding:16px;border-radius:18px;background:var(--surface2);border:1px solid rgba(255,255,255,.05)}
-.stat-value{font-size:1.75rem;font-weight:800;letter-spacing:-.04em;margin-bottom:4px}
-.stat-label{font:11px 'Syne Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
-.panel-list{display:grid;gap:10px}
-.panel-item{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);font-size:14px}
-.panel-item span:last-child{color:var(--muted);font-family:'Syne Mono',monospace;font-size:12px}
+.workflow-card,.section-panel,.tool-card,.cta-band{background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid var(--border);box-shadow:0 24px 60px rgba(0,0,0,.22)}
 .workflow-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:24px}
 .workflow-card{padding:24px;border-radius:24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:14px;transition:transform .2s ease,border-color .2s ease,background .2s ease}
-.workflow-card:hover,.tool-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03))}
 .workflow-icon{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:var(--surface2);font-size:24px}
+.workflow-card:hover,.tool-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03))}
+.panel-kicker,.section-kicker{font:11px 'Syne Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .workflow-title{font-size:1.15rem;letter-spacing:-.03em}
 .workflow-copy{color:var(--muted);font-size:14px;line-height:1.6}
 .workflow-link{font:12px 'Syne Mono',monospace;color:#d9c7ff}
@@ -91,18 +86,19 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
 .cta-title{font-size:clamp(1.7rem,3vw,2.3rem);letter-spacing:-.04em;margin-bottom:10px}
 .cta-copy{color:var(--muted);line-height:1.7;max-width:58ch;font-size:15px}
 .cta-meta{font:11px 'Syne Mono',monospace;color:var(--muted);margin-top:16px;letter-spacing:.08em}
-@media (max-width: 1024px){.hero{grid-template-columns:1fr}.workflow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cta-band{grid-template-columns:1fr}}
+@media (max-width: 1024px){.workflow-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cta-band{grid-template-columns:1fr}}
 @media (max-width: 760px){
   .home-shell{padding:0 16px}
-  .hero{padding:14px 0 20px;gap:14px}
-  .hero-panel{display:none}
-  .hero-copy{padding:24px;border-radius:22px}
-  .eyebrow{margin-bottom:14px;font-size:10px;padding:6px 12px}
-  h1{font-size:clamp(2.4rem,11vw,3.2rem);margin-bottom:12px}
-  .hero-sub{font-size:14px;margin-bottom:18px;line-height:1.6}
-  .hero-actions{flex-direction:row;gap:10px;margin-bottom:16px}
-  .btn{min-height:42px;padding:0 16px;font-size:14px;border-radius:14px}
-  .hero-pills{gap:8px}
+  .hero{padding:14px 0 20px}
+  .hero-inner{max-width:100%}
+  .hero-stat-strip{padding:12px 16px;border-radius:16px}
+  .hstat-val{font-size:1.3rem}
+  .hstat-lbl{font-size:9px}
+  .hstat-div{height:28px}
+  h1{font-size:clamp(2.4rem,10vw,3.2rem);margin-bottom:12px}
+  .hero-sub{font-size:14px;margin-bottom:18px}
+  .hero-actions{gap:10px;margin-bottom:18px}
+  .btn{min-height:44px;padding:0 18px;font-size:14px;border-radius:14px}
   .pill{font-size:11px;padding:6px 10px}
   .workflow-grid{grid-template-columns:1fr;gap:10px;margin-bottom:16px}
   .workflow-card,.section-panel,.tool-card,.cta-band{padding:18px;border-radius:18px}
@@ -110,7 +106,6 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
   .section{margin-top:16px}
   .section-title{font-size:clamp(1.5rem,6vw,1.9rem)}
   .section-copy{font-size:14px}
-  .stats-grid{grid-template-columns:1fr 1fr}
   .section-head{align-items:flex-start}
   .pill,.section-count{width:max-content}
   .cta-band{flex-direction:column;padding:24px}
@@ -120,8 +115,9 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
   .home-shell{padding:0 12px}
   .hero-actions{flex-direction:column;align-items:stretch}
   .btn{width:100%}
-  h1{font-size:clamp(2.2rem,12vw,3rem)}
-  .stats-grid{grid-template-columns:1fr}
+  .hero-stat-strip{gap:0}
+  .hstat-val{font-size:1.15rem}
+  h1{font-size:clamp(2.1rem,11vw,2.8rem)}
   .hero-pills{gap:6px}
   .tool-top{align-items:center}
   .tool-chip{align-self:flex-start}
@@ -134,7 +130,7 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
 <body id="top">
 <main class="home-shell">
   <section class="hero">
-    <div class="hero-copy">
+    <div class="hero-inner">
       <div class="eyebrow">Private by design · built for web</div>
       <h1>Suvidha for your <span class="accent">daily tools</span></h1>
       <p class="hero-sub">A private browser-based toolkit for documents, images, QR codes, and finance. Nothing ever leaves your device.</p>
@@ -142,30 +138,22 @@ h1{font-size:clamp(3rem,7vw,5.8rem);line-height:.95;letter-spacing:-.06em;max-wi
         <a class="btn btn-primary" href="#pdf-tools">Explore tools</a>
         <a class="btn btn-secondary" href="#finance-tools">Calculators</a>
       </div>
+      <div class="hero-stat-strip">
+        <div class="hstat"><span class="hstat-val">9</span><span class="hstat-lbl">Tools</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-val">4</span><span class="hstat-lbl">Categories</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-val">0 KB</span><span class="hstat-lbl">Uploaded</span></div>
+        <div class="hstat-div"></div>
+        <div class="hstat"><span class="hstat-val">Free</span><span class="hstat-lbl">Always</span></div>
+      </div>
       <div class="hero-pills">
         <span class="pill">🔒 Zero uploads</span>
         <span class="pill">⚡ Fast on mobile</span>
         <span class="pill">♻ No signup</span>
+        <span class="pill">🖥️ Works offline</span>
       </div>
     </div>
-    <aside class="hero-panel">
-      <div>
-        <div class="panel-kicker">Why Suvidha</div>
-        <h2 class="panel-title">Private by design. Fast by default.</h2>
-        <p class="panel-copy">Every tool processes files directly in your browser using Web APIs — nothing ever leaves your device.</p>
-      </div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-value" style="background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">9</div><div class="stat-label">Tools</div></div>
-        <div class="stat-card"><div class="stat-value" style="background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">4</div><div class="stat-label">Categories</div></div>
-        <div class="stat-card"><div class="stat-value" style="font-size:1.3rem;background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0 KB</div><div class="stat-label">Uploaded</div></div>
-        <div class="stat-card"><div class="stat-value" style="font-size:1.3rem;background:linear-gradient(135deg,#c4b5fd,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Free</div><div class="stat-label">Always</div></div>
-      </div>
-      <div class="panel-list">
-        <div class="panel-item"><span>🔒 Files never leave your browser</span><span style="color:#86efac">✓</span></div>
-        <div class="panel-item"><span>⚡ Works offline after first load</span><span style="color:#86efac">✓</span></div>
-        <div class="panel-item"><span>📱 Responsive on any screen size</span><span style="color:#86efac">✓</span></div>
-      </div>
-    </aside>
   </section>
 
   <section class="workflow-grid" aria-label="Popular workflows">
